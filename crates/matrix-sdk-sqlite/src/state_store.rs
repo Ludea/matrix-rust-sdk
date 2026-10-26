@@ -925,7 +925,8 @@ impl SqliteConnectionStateStoreExt for rusqlite::Connection {
     }
 }
 
-#[async_trait]
+#[cfg_attr(all(target_arch = "wasm32", target_os = "wasi"), async_trait(?Send))]
+#[cfg_attr(not(all(target_arch = "wasm32", target_os = "wasi")), async_trait)]
 trait SqliteObjectStateStoreExt: SqliteAsyncConnExt {
     async fn get_kv_blob(&self, key: Key) -> Result<Option<Vec<u8>>> {
         Ok(self
@@ -1182,14 +1183,16 @@ trait SqliteObjectStateStoreExt: SqliteAsyncConnExt {
     }
 }
 
-#[async_trait]
+#[cfg_attr(all(target_arch = "wasm32", target_os = "wasi"), async_trait(?Send))]
+#[cfg_attr(not(all(target_arch = "wasm32", target_os = "wasi")), async_trait)]
 impl SqliteObjectStateStoreExt for SqliteAsyncConn {
     async fn set_kv_blob(&self, key: Key, value: Vec<u8>) -> Result<()> {
         Ok(self.interact(move |conn| conn.set_kv_blob(&key, &value)).await.unwrap()?)
     }
 }
 
-#[async_trait]
+#[cfg_attr(all(target_arch = "wasm32", target_os = "wasi"), async_trait(?Send))]
+#[cfg_attr(not(all(target_arch = "wasm32", target_os = "wasi")), async_trait)]
 impl StateStore for SqliteStateStore {
     type Error = Error;
 

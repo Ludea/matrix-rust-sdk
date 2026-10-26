@@ -14,3 +14,6 @@ rustflags = ["-C", "target-feature=+neon,+aes,+sha2,+pmuv3"]
 
 [env]
 IPHONEOS_DEPLOYMENT_TARGET = "16.0"
+
+[target.wasm32-wasip3]
+rustflags = ['--cfg', 'tokio_unstable']

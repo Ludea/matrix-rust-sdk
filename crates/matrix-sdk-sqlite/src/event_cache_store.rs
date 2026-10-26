@@ -677,7 +677,8 @@ async fn run_migrations(conn: &SqliteAsyncConn, version: u8) -> Result<()> {
     Ok(())
 }
 
-#[async_trait]
+#[cfg_attr(all(target_arch = "wasm32", target_os = "wasi"), async_trait(?Send))]
+#[cfg_attr(not(all(target_arch = "wasm32", target_os = "wasi")), async_trait)]
 impl EventCacheStore for SqliteEventCacheStore {
     type Error = Error;
 
